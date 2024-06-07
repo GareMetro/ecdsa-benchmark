@@ -27,6 +27,6 @@ setup(
     long_description=read("README.md") if os.path.isfile("README.md") else "",
     long_description_type='text/markdown',
     install_requires=["pycryptodomex",
-                      "pycrypto",
+                      "pycryptodome",
                       "ecdsa"],
 )
