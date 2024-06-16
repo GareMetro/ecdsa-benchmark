@@ -7,7 +7,7 @@ EcDSA/DSA Nonce Reuse Private Key Recovery
 
 import Crypto
 from Crypto.PublicKey import DSA
-from Crypto.PublicKey.pubkey import inverse
+from Crypto.Util.number import inverse
 import Cryptodome.PublicKey.DSA
 import Cryptodome.PublicKey.ECC
 
@@ -39,17 +39,11 @@ def bignum_to_hex(val, nbits=256):
 
 # noinspection PyProtectedMember,PyProtectedMember,PyProtectedMember,PyProtectedMember,PyProtectedMember
 def to_dsakey(secret_key, _from=Crypto.PublicKey.DSA, _to=Cryptodome.PublicKey.DSA):
-    if _from == Cryptodome.PublicKey.DSA:
-        return _to.construct((int(secret_key._key['y']),
+    return _to.construct((int(secret_key._key['y']),
                               int(secret_key._key['g']),
                               int(secret_key._key['p']),
                               int(secret_key._key['q']),
                               int(secret_key._key['x'])))
-    return _to.construct((secret_key.key.y,
-                          secret_key.key.g,
-                          secret_key.key.p,
-                          secret_key.key.q,
-                          secret_key.key.x))
 
 
 def to_ecdsakey(secret_key, _from=ecdsa.SigningKey, _to=Cryptodome.PublicKey.ECC):
@@ -155,7 +149,7 @@ class DsaSignature(RecoverableSignature):
         super(DsaSignature, self).__init__(sig, h, pubkey)
         logger.debug("%r - check verifies.." % self)
         # check sig verifies hash
-        assert self.pubkey.verify(self.h, self.sig.tuple)
+        assert self.pubkey._verify(self.h, self.sig.tuple)
         logger.debug("%r - Signature is ok" % self)
 
     def _load_pubkey(self, pubkey):

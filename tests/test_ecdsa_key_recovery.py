@@ -5,6 +5,7 @@
 from Crypto.Random import random
 from Crypto.Hash import SHA
 from Crypto.PublicKey import DSA
+from Crypto.Math.Numbers import Integer
 
 from ecdsa_key_recovery import DsaSignature, EcDsaSignature, ecdsa, bignum_to_hex, bytes_fromhex
 
@@ -74,7 +75,7 @@ oNcWiy8ViiyW20ZzMoZhn8yq+6ymvA==
             # generate msg hash
             # sign the messages using privkey
             h = SHA.new(msg).digest()
-            r, s = privkey.sign(h, k)
+            r, s = privkey._sign(Integer.from_bytes(h), k)
             return h, (r, s), privkey.publickey()
 
         @staticmethod
