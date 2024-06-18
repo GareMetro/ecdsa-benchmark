@@ -75,7 +75,7 @@ def plot_exectime(data, x_label, title):
         y = [row[2] for row in subset]
         plt.plot(x, y, label=algorithm)
     plt.xlabel(x_label)
-    plt.ylabel('Execution Time (ms)')
+    plt.ylabel('Execution Time (s)')
     plt.title(title)
     plt.legend()
     plt.show()
