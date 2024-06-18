@@ -86,9 +86,13 @@ def test_msg_size_DSA(secret_key, k, key_size, msg_size, test_number):
 ScriptBd.clearTable()
 ScriptBd.createTable()
 #Test de différents nonces taille 1024
-test_nonces_res1 = test_nonces_DSA("Secret Message 1", "Another very secret message", DSA.generate(1024), 100, 1024) 
+test_nonces_res1 = test_nonces_DSA("Secret Message 1", "Another very secret message", DSA.generate(1024), 10, 1024) 
 #Test de différents nonces taille 2048
 test_nonces_res2 = test_nonces_DSA("Secret Message 1", "Another very secret message", DSA.generate(2048), 10, 2048)
+#Test de différents nonces taille 4096
+test_nonces_res2 = test_nonces_DSA("Secret Message 1", "Another very secret message", DSA.generate(2048), 10, 4096)
+#Test de différents nonces taille 8192
+test_nonces_res2 = test_nonces_DSA("Secret Message 1", "Another very secret message", DSA.generate(2048), 10, 8192)
 #Tests de différents messages taille 128
 key = DSA.generate(1024)
 k = random.StrongRandom().randint(1, key.q - 1)
@@ -96,4 +100,8 @@ global_nonce_counter += 1
 test_size1 = test_msg_size_DSA(key, k, 1024, 128, 100)
 #Tests de différents messages taille 256
 test_size2 = test_msg_size_DSA(key, k, 1024, 256, 100)
-ScriptBd.addManyTests(test_nonces_res1 + test_nonces_res2 test_size1 + test_size2)
+#Tests de différents messages taille 512
+test_size2 = test_msg_size_DSA(key, k, 1024, 512, 100)
+#Tests de différents messages taille 1024
+test_size2 = test_msg_size_DSA(key, k, 1024, 1024, 100)
+ScriptBd.addManyTests(test_nonces_res1 + test_nonces_res2 + test_size1 + test_size2)
