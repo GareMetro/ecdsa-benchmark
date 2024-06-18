@@ -81,13 +81,13 @@ def plot_exectime(data, x_label, title):
     plt.show()
 
 # Plot success rate over taille
-plot_success_rate(success_taille_data, 'Taille', 'Success Rate of DSA and ECDSA over Taille')
+plot_success_rate(success_taille_data, 'Message size', 'Success Rate of DSA and ECDSA over message size')
 
 # Plot success rate over complexite
-plot_success_rate(success_complexite_data, 'Complexite', 'Success Rate of DSA and ECDSA over Complexite')
+plot_success_rate(success_complexite_data, 'Complexity', 'Success Rate of DSA and ECDSA over k complexity')
 
 # Plot execution time over taille
-plot_exectime(exectime_taille_data, 'Taille', 'Execution Time of DSA and ECDSA over Taille')
+plot_exectime(exectime_taille_data, 'Message size', 'Execution Time of DSA and ECDSA over message size')
 
 # Plot execution time over complexite
-plot_exectime(exectime_complexite_data, 'Complexite', 'Execution Time of DSA and ECDSA over Complexite')
+plot_exectime(exectime_complexite_data, 'Complexity', 'Execution Time of DSA and ECDSA over complexity')
