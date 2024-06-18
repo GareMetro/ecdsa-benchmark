@@ -31,6 +31,18 @@ def addTest(algorithm, taille, complexite, seed, success, exectime):
     connection.commit()
     connection.close()
 
+def addManyTests(tests):
+    connection = sqlite3.connect('tests.db')
+    cursor = connection.cursor()
+
+    cursor.executemany('''
+        INSERT INTO tests (algorithm, taille, complexite, seed, success, exectime)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ''', tests)
+
+    connection.commit()
+    connection.close()
+
 def deleteLastTest():
     connection = sqlite3.connect('tests.db')
     cursor = connection.cursor()
