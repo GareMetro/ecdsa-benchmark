@@ -106,6 +106,24 @@ def test_msg_size_DSA(secret_key, k, key_size, msg_size, test_number):
 	print("Avg recovery duration : " + str(float(duration_sum)/success_number) + "s")
 	return res
 
+#Teste deux même messages avec différentes clefs de taille donnée
+def test_key_DSA(key_size, msgA, msgB, test_number):
+	success_number = 0
+	duration_sum = 0
+	res = []
+	for i in range(test_number):
+		secret_key = DSA.generate(key_size)
+		k = random.StrongRandom().randint(1, secret_key.q - 1)
+		test = single_test_DSA(msgA, msgB, secret_key, k, key_size, global_nonce_counter)
+		res.append(test)
+		if test[4]:
+			success_number += 1
+			duration_sum += test[5]
+	print("Success rate : " + str(success_number/test_number))
+	print("Avg recovery duration : " + str(float(duration_sum)/success_number) + "s")
+	return res
+
+
 
 def single_test_ECDSA(msgA, msgB, secret_key, k, curve, seed):
 	hashA = SHA.new(msgA.encode("utf-8")).digest()
@@ -160,6 +178,23 @@ def test_msg_size_ECDSA(secret_key, k, curve, msg_size, test_number):
 	print("Avg recovery duration : " + str(float(duration_sum)/success_number) + "s")
 	return res
 
+def test_key_ECDSA(curve, msgA, msgB, test_number):
+	success_number = 0
+	duration_sum = 0
+	res = []
+	for i in range(test_number):
+		secret_key = ecdsa.keys.SigningKey.generate(curve)
+		order = secret_key.verifying_key.pubkey.generator.order()
+		k = random.StrongRandom().randint(1, order - 1)
+		test = single_test_ECDSA(msgA, msgB, secret_key, k, curve, global_nonce_counter)
+		res.append(test)
+		if test[4]:
+			success_number += 1
+			duration_sum += test[5]
+	print("Success rate : " + str(success_number/test_number))
+	print("Avg recovery duration : " + str(float(duration_sum)/success_number) + "s")
+	return res
+
 
 ScriptBd.clearTable()
 ScriptBd.createTable()
@@ -182,6 +217,10 @@ test_res.extend(test_msg_size_DSA(key, k, 1024, 512, 100))
 #Tests de différents messages taille 1024
 test_res.extend(test_msg_size_DSA(key, k, 1024, 1024, 100))
 
+test_res.extend(test_key_DSA(1024, "Super Duper secret message", "Very important financial report", 100))
+test_res.extend(test_key_DSA(2048, "Super Duper secret message", "Very important financial report", 100))
+test_res.extend(test_key_DSA(3072, "Super Duper secret message", "Very important financial report", 100))
+
 test_res.extend(test_nonces_ECDSA("Secret Message 1", "Another very secret message", ecdsa.keys.SigningKey.generate(ecdsa.NIST384p), ecdsa.NIST384p, 100))
 test_res.extend(test_nonces_ECDSA("Secret Message 1", "Another very secret message", ecdsa.keys.SigningKey.generate(ecdsa.NIST256p), ecdsa.NIST256p, 100))
 test_res.extend(test_nonces_ECDSA("Secret Message 1", "Another very secret message", ecdsa.keys.SigningKey.generate(ecdsa.NIST192p), ecdsa.NIST192p, 100))
@@ -194,4 +233,10 @@ test_res.extend(test_msg_size_ECDSA(secret_key, k, ecdsa.BRAINPOOLP384t1, 128, 1
 test_res.extend(test_msg_size_ECDSA(secret_key, k, ecdsa.BRAINPOOLP384t1, 256, 100))
 test_res.extend(test_msg_size_ECDSA(secret_key, k, ecdsa.BRAINPOOLP384t1, 512, 100))
 test_res.extend(test_msg_size_ECDSA(secret_key, k, ecdsa.BRAINPOOLP384t1, 1024, 100))
+
+test_res.extend(test_key_ECDSA(ecdsa.NIST384p, "Super Duper secret message", "Very important financial report", 100))
+test_res.extend(test_key_ECDSA(ecdsa.NIST256p, "Super Duper secret message", "Very important financial report", 100))
+test_res.extend(test_key_ECDSA(ecdsa.NIST192p, "Super Duper secret message", "Very important financial report", 100))
+test_res.extend(test_key_ECDSA(ecdsa.NIST224p, "Super Duper secret message", "Very important financial report", 100))
+test_res.extend(test_key_ECDSA(ecdsa.NIST521p, "Super Duper secret message", "Very important financial report", 100))
 ScriptBd.addManyTests(test_res)
